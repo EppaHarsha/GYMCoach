@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from models.user_schema import UserSchema
 from models.workout_schema import WorkoutSchema
 import os
+
 load_dotenv()
 mongurl = (os.getenv("MONGO_URL"))
 
@@ -12,9 +13,7 @@ mongurl = (os.getenv("MONGO_URL"))
 @st.cache_resource
 def get_database():
     client = MongoClient(mongurl)
-
     db = client["gymcoach"]
-
     return db
 
 
@@ -31,23 +30,17 @@ def get_user(username):
 def create_user(username):
     user = UserSchema(username=username)
     users.insert_one(user.model_dump())
-
     return get_user(username)
 
 
 def get_or_create_user(username):
-
     user = get_user(username)
-
     if user is None:
-
         user = create_user(username)
-
     return user
 
 
 def add_exercise(user_id, exercise_name, reps, sets, time):
-
     today = datetime.now().strftime("%Y-%m-%d")
     existing_workout = workouts.find_one(
         {"user_id": user_id, "exercise_name": exercise_name, "date": today}
@@ -72,7 +65,5 @@ def add_exercise(user_id, exercise_name, reps, sets, time):
 
 
 def get_users_exercises(user_id):
-
-    workouts = workouts.find({"user_id": user_id})
-
-    return list(workouts)
+    user_workouts = workouts.find({"user_id": str(user_id)})
+    return list(user_workouts)

@@ -3,6 +3,7 @@ from core.base_exercise import BaseExercise
 class SquatDetector(BaseExercise):
     def __init__(self):
         super().__init__()
+        
     DOWN_THRESHOLD = 100   
     UP_THRESHOLD = 160     
     MIN_VISIBILITY = 0.7
@@ -19,6 +20,7 @@ class SquatDetector(BaseExercise):
     def reset(self):
         self.reps = 0
         self.stage = None
+        
     def process(self, landmarks):
         left_knee_angle = self.calculate_angle(
             self.get_point(landmarks,self.LEFT_HIP),
